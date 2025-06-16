@@ -1,4 +1,8 @@
 
+party_room_cake = False
+slices = 0
+slices_left = 8 - slices
+
 player_inventory = {
     "water bottle": 2,
     "broken bottle holder": 1,
@@ -83,6 +87,14 @@ def inventory():
         else:
             print("\nInvalid request. Please try again.")
 
+
+def reset_inventory():
+    for item in player_inventory:
+        del item
+    
+    player_inventory["water bottle"] = player_inventory.get("water bottle", 0) + 2
+    player_inventory["broken bottle holder"] = player_inventory.get("broken bottle holder", 0) + 1
+    player_inventory["wine cork"] = player_inventory.get("wine cork", 0) + 1
 
 def main():
   print("You wake up, the last thing you remember is suffocating in gassy fabric, closing in from behind. This place looks familiar, you have definitely been here sometime before, but you can't seem to remember anything. The yellowish wallpaper and the cold floor all feel so lonely, but that doesn't matter now. Why can't you remember anything and yet everything seems so familiar?")
@@ -403,13 +415,30 @@ def PartyRoom():
     global current_room
     current_room = "PartyRoom"
 
+    global party_room_cake
+
     while True:
         print("---PartyRoom---")
+
+        if party_room_cake == True:
+            print("You enter a brightly coloured room with helium balloons and a tall clown standing by opposite wall, who is wearing a bright rainbow wig and a giant red nose. The tall clown is smiling a big, bright, red smile.")
+            print("You walk across the vividly decorated room, and can feel the clown's eyes following you, making eye contact when you glance at it nervously. He does not provoke you, watching quietly as you approach the table in the centre of the room.")
+            print("On the table, there is a 5-layer birthday cake.")
+            print("It looks and smells a bit stale, but would still undoubtably be delicious.")
+            print(f'There are {slices_left} slices left of the cake.')
+            print("You reach for the cake, but a unnerving chill runs down your spine, and your appetite has disappeared completely. Now, for some strange reason, you feel repulsed by the cake, and want to leave as soon as possible.")
+            print("You leave the room.")
+            HallwayNorth()
+            return
         
         print("You enter a brightly coloured room with helium balloons and a tall clown standing by opposite wall, who is wearing a bright rainbow wig and a giant red nose. The tall clown is smiling a big, bright, red smile.")
         print("You walk across the vividly decorated room, and can feel the clown's eyes following you, making eye contact when you glance at it nervously. He does not provoke you, watching quietly as you approach the table in the centre of the room.")
         print("On the table, there is a 5-layer birthday cake.")
         print("It looks and smells a bit stale, but would still undoubtably be delicious.")
+        if slices == 0:
+            print("There are 8 large slices on the table, cut perfectly for you to grab.")
+        else:
+            print(f'There are {slices_left} large slices on the plate, ready for you to grab.')
         print("Your mouth waters as you approach it, but as you get closer, you realise the sugary icing spells out 'HAPPY BIRTHDAY; DO NOT EAT ME'.")
         print("The cake looks so appetizing, and you're so hungry.")
         print("Would it hurt just to take a single slice?")
@@ -419,15 +448,54 @@ def PartyRoom():
 
         if action == "show":
             inventory()
-        elif action == "eat":
-            print("----------")
+
         elif action == "talk":
             print("You try to start a conversation with the tall clown that is eyeing you. You ask about the 5-layer cake with the strange iced message. The tall clown nods, and warns you not to eat the cake. He looks like he is on the verge of tears, his watery eyes sparkling and his delicate voice trembling. Was eating the cake that dangerous? Oh well. The clown seems really desperate for you to not eat the cake, so you leave the cake and the party room. As you close the door, you hear a huge sigh of relief from the tall clown.")
             print("You exit the room.")
             HallwayNorth()
             return
         elif action == "w":
+            print("As you close the door, you hear a huge sigh of relief from the tall clown. You exit the room.")
             HallwayNorth()
+            return
+
+        while action == "eat":
+
+            if slices == 3:
+                print("Each slice of the cake is delicious and filling, and every bite of it makes you feel more addictive.")
+                print("Suddenly, you feel sick, and sway dangerously on your feet, and then the impact of falling to the ground on your knees.")
+                print("Your head is spinning, and you try to stand back up again, your legs shaking.")
+                print("The turn your head around frantically, trying to ask for help. The clown is no where in your sight.")
+                print("You slowly stand up, still feeling extremely nausous, and then a picece of cloth is wrapped around your head, suffocating you, the subtle sweet smell lingering as you fall into darkness.")
+                ##--------------------------------------------------------------
+            
+            slices = slices + 1
+            
+            print("You take a slice of the huge cake and have a huge bite.")
+            print("Wow.")
+            print("It. Is. Delicious.")
+            print("After finishing the slice, you turn around to look at the clown still staring at you, and you see a face of true horror etched across his face.")
+            print("'Please...' he begged quietly,'Please stop eating. You will regret every slice you take.")
+            print("You are unsure what to do. Should you keep eating or leave the room?")
+
+            action = input("\nWhat do you want to do? Options: show, eat, talk, w\n").lower()
+
+            if action == "show":
+                inventory()
+
+            elif action == "talk":
+                print("You try to start a conversation with the tall clown that is eyeing you. You ask about the 5-layer cake with the strange iced message. The tall clown nods, and warns you not to eat the cake. He looks like he is on the verge of tears, his watery eyes sparkling and his delicate voice trembling. Was eating the cake that dangerous? Oh well. The clown seems really desperate for you to not eat the cake, so you leave the cake and the party room. As you close the door, you hear a huge sigh of relief from the tall clown.")
+                print("You exit the room.")
+                HallwayNorth()
+                return
+            elif action == "w":
+                print("As you close the door, you hear a huge sigh of relief from the tall clown. You exit the room.")
+                HallwayNorth()
+                return
+            
+
+
+        else:
             print("You don't think you can go that way right now.")
 
 
