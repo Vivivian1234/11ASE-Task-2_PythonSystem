@@ -1,3 +1,8 @@
+import random
+
+party_room_cake = False
+slices = 0
+slices_left = 8 - slices
 
 player_inventory = {
     "water bottle": 2,
@@ -6,7 +11,7 @@ player_inventory = {
 }
 
 def inventory():
-    global player_inventory  # let us access and modify the shared one
+    global player_inventory
 
     while True:
         print("\n---Inventory---\n")
@@ -78,11 +83,14 @@ def inventory():
                   print("What am I?'")
                   print("You think about this riddle, and a few answers are possible...but only one answer appears clear as day. You know it...and it's in the bathrooom!")
 
+                elif use == "helpful casino reminder":
+                    print("A helpful little reminder about yourself:")
+                    print("'This machine runs on hope...You're funds are inefficient. Maybe check on that.'")
+
             else:
                 print(f"\nYou don't have any {use}s left!")
         else:
             print("\nInvalid request. Please try again.")
-
 
 def main():
   print("You wake up, the last thing you remember is suffocating in gassy fabric, closing in from behind. This place looks familiar, you have definitely been here sometime before, but you can't seem to remember anything. The yellowish wallpaper and the cold floor all feel so lonely, but that doesn't matter now. Why can't you remember anything and yet everything seems so familiar?")
@@ -95,8 +103,6 @@ def main():
   Cellar()
 
 def Cellar():
-    global current_room
-    current_room = "Cellar"
 
     while True:
         print("\n---The Cellar---")
@@ -117,12 +123,10 @@ def Cellar():
             print("You don't think you can go that way right now.")
         
 def HallwayEast():
-    global current_room
-    current_room = "HallwayEast"
 
     while True:
         print("\n---HallwayEast---")
-        print("There are two rooms down this hallway, a dog room to the north and a bathroom continuing east. You can also return to the cellar back to the west.")
+        print("There are two rooms down this hallway. A dog room to the north and a bathroom continuing east. You can also return to the cellar back to the west.")
         action = input("\nWhat do you want to do? Options: show, n, e, w\n").lower()
         if action == "show":
             inventory()
@@ -136,8 +140,6 @@ def HallwayEast():
             print("You don't think you can go that way right now.")
 
 def DogRoom():
-    global current_room
-    current_room = "DogRoom"
 
     while True:
         print("\n---Dog Room---")
@@ -153,32 +155,38 @@ def DogRoom():
         if 'bone' in player_inventory:
             print("But his mouth is watering when he spots the bone in your pouch.\n")
 
-        action = input("\nWhat do you want to do? Options: use, s\n").lower()
+        action = input("What do you want to do? Options: use, s\n").lower()
 
         if action == "use":
 
             if "bone" not in player_inventory:
                 print("There is nothing helpful in your inventory right now, best come back later to find something suitable.")
+            
             else:
-                use_what = input("Use what?\n").lower()
-                if use_what == "bone":
-                    print("The black doggo gobbles up the bone and wags its tail at you, no longer aggressive. You pat the dog (awww) and free him from the pole. The dog runs off who knows where and reveals a key underneath the spot he was standing on. You pick up the key and a small black pen left behind.")
-                    
-                    player_inventory["bone"] -= 1
-                    if player_inventory["bone"] == 0:
-                        del player_inventory["bone"]
+                while True:
+                    print("Use what?\n\nYour Inventory:")
+                    for item, qty in player_inventory.items():
+                        print(f"- {item} (x{qty})")
+                    use_what = input(">")
 
-                    player_inventory["key 1"] = player_inventory.get("key 1", 0) + 1
-                    player_inventory["laser pen"] = player_inventory.get("laser pen", 0) + 1
+                    if use_what == "bone":
+                        print("The black doggo gobbles up the bone and wags its tail at you, no longer aggressive. You pat the dog (awww) and free him from the pole. The dog runs off who knows where and reveals a key underneath the spot he was standing on. You pick up the key and a small black pen. It looks delicate, so you are careful when you pick it up, afraid of damaging it. The fancy writing on the pen read 'Laser Pen'. Laser Pen? Really? You put both items in your pocket.")
+                                        
+                        player_inventory["bone"] -= 1
+                        if player_inventory["bone"] == 0:
+                            del player_inventory["bone"]
 
-                    print("You used the bone. 'key 1' and 'laser pen' added to your backpack.")
-                    print("\nYour updated backpack:")
-                    inventory()
-                    print("\nThere is nothing left to do here. You exit the room.")
-                    HallwayEast()
-                    return
-                else:
-                    print(f"You try to use the {use_what}, but it does nothing. The dog stares reproachfully at you, hungry yet still hostile.")
+                        player_inventory["key 1"] = player_inventory.get("key 1", 0) + 1
+                        player_inventory["laser pen"] = player_inventory.get("laser pen", 0) + 1
+
+                        print("You used the bone. 'key 1' and 'laser pen' added to your backpack.")
+                        print("\nYour updated backpack:")
+                        inventory()
+                        print("\nThere is nothing left to do here. You exit the room.")
+                        HallwayEast()
+                        return
+                    else:
+                        print(f"You try to use the {use_what}, but it does nothing. The dog stares reproachfully at you, hungry yet still hostile.")
 
         elif action == "s":
             HallwayEast()
@@ -188,8 +196,6 @@ def DogRoom():
             print("Invalid option.")
 
 def Bathroom():
-    global current_room
-    current_room = "Bathroom"
 
     print("\n---Bathroom---")
 
@@ -218,23 +224,28 @@ def Bathroom():
             action = input("\nWhat do you want to do? Options: use, s\n").lower()
 
             if action == "use":
-                use_what = input("Use what?\n").lower()
-                if use_what == "lever":
-                    print("The mirror swings open and reveals a small hole containing a key. You grab it and swing the mirror back shut. The cold key in your hands has a small '2' on it. You place it in your backpack. \n")
-                    player_inventory["lever"] -= 1
-                    if player_inventory["lever"] == 0:
-                        del player_inventory["lever"]
+                while True:
+                    print("Use what?\n\nYour Inventory:")
+                    for item, qty in player_inventory.items():
+                        print(f"- {item} (x{qty})")
+                    use_what = input(">")
 
-                    player_inventory["key 2"] = player_inventory.get("key 2", 0) + 1
+                    if use_what == "lever":
+                        print("The mirror swings open and reveals a small hole containing a key. You grab it and swing the mirror back shut. The cold key in your hands has a small '2' on it. You place it in your backpack. \n")
+                        player_inventory["lever"] -= 1
+                        if player_inventory["lever"] == 0:
+                            del player_inventory["lever"]
 
-                    print("You used the lever. 'key 2' added to your backpack.")
-                    print("\nYour updated backpack:")
-                    inventory()
-                    print("\nThere is nothing left to do here. You exit the room.")
-                    HallwayEast()
-                    return
-                else:
-                    print(f"You try to use the {use_what}, but it does nothing. You stare at the cracked relfection of you in the mirror, and you swear it is looking at you weirdly.")
+                        player_inventory["key 2"] = player_inventory.get("key 2", 0) + 1
+
+                        print("You used the lever. 'key 2' added to your backpack.")
+                        print("\nYour updated backpack:")
+                        inventory()
+                        print("\nThere is nothing left to do here. You exit the room.")
+                        HallwayEast()
+                        return
+                    else:
+                        print(f"You try to use the {use_what}, but it does nothing. You stare at the cracked relfection of you in the mirror, and you swear it is looking at you weirdly.")
             elif action == "s":
                 print("You exit the room.")
                 HallwayEast()
@@ -248,12 +259,10 @@ def Bathroom():
         return
 
 def HallwayNorth():
-    global current_room
-    current_room = "HallwayNorth"
 
     while True:
         print("\n---HallwayNorth---")
-        print("There are three rooms down this hallway, a party room to the east, a bedroom with a messy sign with 'Andy' scribbled on it to the west, and a cafe continuing north. You can also return to the cellar back to the south.")
+        print("There are three rooms down this hallway. A party room to the east, a bedroom with a messy sign with 'Andy' scribbled on it to the west, and a cafe continuing north. You can also return to the cellar back to the south.")
         action = input("\nWhat do you want to do? Options: show, n, e, s, w\n").lower()
         if action == "show":
           inventory()
@@ -269,8 +278,6 @@ def HallwayNorth():
           print("You don't think you can go that way right now.")
         
 def Cafe():
-    global current_room
-    current_room = "Cafe"
 
     while True:
         print("---Cafe---")
@@ -295,24 +302,30 @@ def Cafe():
             action = input("\nWhat do you want to do? Options: use, s\n").lower()
 
             if action == "use":
-                use_what = input("Use what?\n").lower()
-                if use_what == "coin":
-                    print("You hand over the small coin, and Friendly Baraista gives you piping hot coffee in a simple paper cup. You gladly accept the coffee and hold on to it. You can't drink it, because you just so happened to be allergic to coffee. Oh well, at least it's warm. You put it away. \n")
+                while True:
+
+                    print("Use what?\n\nYour Inventory:")
+                    for item, qty in player_inventory.items():
+                        print(f"- {item} (x{qty})")
+                    use_what = input(">")
                     
-                    player_inventory["coin"] -= 1
-                    if player_inventory["coin"] == 0:
-                        del player_inventory["coin"]
+                    if use_what == "coin":
+                        print("You hand over the small coin, and Friendly Baraista gives you piping hot coffee in a simple paper cup. You gladly accept the coffee and hold on to it. You can't drink it, because you just so happened to be allergic to coffee. Oh well, at least it's warm. You put it away. \n")
+                        
+                        player_inventory["coin"] -= 1
+                        if player_inventory["coin"] == 0:
+                            del player_inventory["coin"]
 
-                    player_inventory["coffee"] = player_inventory.get("coffee", 0) + 1
+                        player_inventory["coffee"] = player_inventory.get("coffee", 0) + 1
 
-                    print("You used the coin. 'coffee' added to your backpack.")
-                    print("\nYour updated backpack:")
-                    inventory()
-                    print("\nThere is nothing left to do here. You exit the room.")
-                    HallwayNorth()
-                    return
-                else:
-                    print(f"You try to use the {use_what}, but it does nothing. Friendly Barista stares at you, smiling.")
+                        print("You used the coin. 'coffee' added to your backpack.")
+                        print("\nYour updated backpack:")
+                        inventory()
+                        print("\nThere is nothing left to do here. You exit the room.")
+                        HallwayNorth()
+                        return
+                    else:
+                        print(f"You try to use the {use_what}, but it does nothing. Friendly Barista stares at you, smiling.")
             elif action == "s":
                 print("You exit the room.")
                 HallwayNorth()
@@ -337,8 +350,6 @@ def Cafe():
             print("Invalid option.")
 
 def AndyRoom():
-    global current_room
-    current_room = "AndyRoom"
 
     while True:
         print("---AndyRoom---")
@@ -400,38 +411,184 @@ def AndyRoom():
         return
 
 def PartyRoom():
-    global current_room
-    current_room = "PartyRoom"
+    global party_room_cake
+    global slices
+    global slices_left
+    global player_inventory
+    
+    print("---PartyRoom---")
 
-    while True:
-        print("---PartyRoom---")
-        
+    if party_room_cake == True:
         print("You enter a brightly coloured room with helium balloons and a tall clown standing by opposite wall, who is wearing a bright rainbow wig and a giant red nose. The tall clown is smiling a big, bright, red smile.")
         print("You walk across the vividly decorated room, and can feel the clown's eyes following you, making eye contact when you glance at it nervously. He does not provoke you, watching quietly as you approach the table in the centre of the room.")
         print("On the table, there is a 5-layer birthday cake.")
         print("It looks and smells a bit stale, but would still undoubtably be delicious.")
-        print("Your mouth waters as you approach it, but as you get closer, you realise the sugary icing spells out 'HAPPY BIRTHDAY; DO NOT EAT ME'.")
-        print("The cake looks so appetizing, and you're so hungry.")
-        print("Would it hurt just to take a single slice?")
-        print("Should you go talk to the quiet clown watching you?")
+        print(f'There are {slices_left - 1} slices left of the cake.')
+        print("You reach for the cake, but an unnerving chill runs down your spine, and your appetite has disappeared completely. Now, for some strange reason, you feel repulsed by the cake, and want to leave as soon as possible.")
+        print("You leave the room.")
+        HallwayNorth()
+        return
 
+    print("You enter a brightly coloured room with helium balloons and a tall clown standing by opposite wall, who is wearing a bright rainbow wig and a giant red nose. The tall clown is smiling a big, bright, red smile.")
+    print("You walk across the vividly decorated room, and can feel the clown's eyes following you, making eye contact when you glance at it nervously. He does not provoke you, watching quietly as you approach the table in the centre of the room.")
+    print("On the table, there is a 5-layer birthday cake.")
+    if slices == 0:
+        print("There are 8 large slices on the table, cut perfectly for you to grab.")
+    else:
+        print(f'There are {slices_left} large slices on the plate, ready for you to grab.')
+    print("Your mouth waters as you approach it, but as you get closer, you realise the sugary icing spells out 'HAPPY BIRTHDAY; DO NOT EAT ME'.")
+    print("The cake looks so appetizing, and you're so hungry.")
+    print("Would it hurt just to take a single slice?")
+    print("Should you go talk to the quiet clown watching you?")
+
+    while True:
         action = input("\nWhat do you want to do? Options: show, eat, talk, w\n").lower()
 
         if action == "show":
             inventory()
-        elif action == "eat":
-            print("----------")
+
         elif action == "talk":
             print("You try to start a conversation with the tall clown that is eyeing you. You ask about the 5-layer cake with the strange iced message. The tall clown nods, and warns you not to eat the cake. He looks like he is on the verge of tears, his watery eyes sparkling and his delicate voice trembling. Was eating the cake that dangerous? Oh well. The clown seems really desperate for you to not eat the cake, so you leave the cake and the party room. As you close the door, you hear a huge sigh of relief from the tall clown.")
             print("You exit the room.")
             HallwayNorth()
             return
+
         elif action == "w":
+            print("As you close the door, you hear a huge sigh of relief from the tall clown. You exit the room.")
             HallwayNorth()
+            return
+
+        elif action == "eat":
+            if slices_left == 6:
+                print("\nEach slice of the cake is delicious and filling, and every bite of it makes you feel more addictive.")
+                print("Suddenly, you feel sick, and sway dangerously on your feet, and then the impact of falling to the ground on your knees.")
+                print("Your head is spinning, and you try to stand back up again, your legs shaking.")
+                print("Then you slowly stand up, still feeling extremely nauseous, and a piece of cloth is wrapped around your head, suffocating you, the subtle sweet smell lingering as you fall into darkness.\n")
+
+                player_inventory = {
+                    "water bottle": 2,
+                    "broken bottle holder": 1,
+                    "wine cork": 1
+                }
+                party_room_cake = True
+
+                main()
+                return
+            else:
+                slices += 1
+                slices_left -= 1
+
+                print("You take a slice of the huge cake and have a huge bite.")
+                print("Wow.")
+                print("It. Is. Delicious.")
+                print("After finishing the slice, you turn around to look at the clown still staring at you, and you see a face of true horror etched across his face.")
+                print("'Please...' he begged quietly, 'Please stop eating. You will regret every slice you take.'")
+                print("You are unsure what to do. Should you keep eating or leave the room?")
+
+        else:
+            print("Invalid option.")
+
+def HallwayWest():
+
+    while True:
+        print("\n---HallwayWest---")
+        print("There are three rooms down this hallway. A kitchen to the north, a casino to the south, and a library continuing west. You can also return to the cellar back to the east.")
+        action = input("\nWhat do you want to do? Options: show, n, e, s, w\n").lower()
+        if action == "show":
+            inventory()
+        elif action == "n":
+            Kitchen()
+        elif action == "e":
+            Cellar()
+        elif action == "s":
+            Casino()
+        elif action == "w":
+            Library()
+        else:
             print("You don't think you can go that way right now.")
 
 
+def Kitchen():
+    while True:
+        print("\n---Kitchen---")
+
+        print("You enter a huge kitchen with a gleaming marble counter and vintage wall lights. There is a ")
+
+def Casino():
+    global random
+
+    while True:
+        print("\n---Casino---")
+
+        print("You enter a darkly lit room wich red carpets, gold-trimmed furniture, and crystal chandeliers glimmer. The flashing lights on top of each machine seem to imprint in your brain as you blink quickly, trying to adjust to the light change.")
+        print("You walk around the machines, huge advertisments and deals exploding on the screen. You walk up to one, a classic slot machine promising how getting tripple 7s will make you rich.")
+        print("You try to pull down on the huge lever on the side, but it doesn't budge. Instead, the screen shuts down completely, reflecting your expression.")
+        print("Slowly, a small peice of paper prints out from where the tickets should come out.")
+        print("\nIn small black writing it reads:")
+        print("'This machine runs on hope...You're funds are inefficient. Maybe check on that.'\n")
+
+        player_inventory["helpful casino reminder"] = player_inventory.get("casino reminder", 0) + 1
+        print("'helpful casino reminder' added to your backpack.\n")
+
+        print("Ok...that was definetely...unexpected. You move towards the other casino machines, but each one turns off and prints the same message when you attempt to play them. Fine.")
+        print("You turn to leave, but something catches your eye.")
+        print("A yellow cardboard box with a small narrow hole cut in the lid in positioned on a wooden chair in a corner of the room. A piece of paper stuck on it with sticky tape says 'LOTTERY' in messy handwriting.")
+        print("You approach it, eyeing it skeptically. This...is a lottery? What's stopping you from taking the box off the stool and opening it?\n")
+        print("Apparently, the strongest super glue in existence, because the box does not budge when you try to take it off the stool, and neither does the lid. You end up picking the whole stool up, rotating the whole set up to see what falls out of the hole. Nothing slips out.")
+        print("Instead the piece of paper stuck on the box falls off and you see the rules of the supposed 'LOTTERY' on the back.")
+        
+        print("\nThis is the LOTTERY, the most rewarding casino machine in existence! It's simple:")
+        print("There are pieces of paper labelled through 1-5 in this box. All you have to do it pick out a paper with a 5 on it and you win!")
+        print("You can also keep going forever until you get the 5! Simple, isn't it?")
+
+        print("\nAh, but for people like you, where you are completely devoid of hope, you may find yourself a little unlucky...")
+        print("But do not fear! We have added a small helpful rle that would help let getting the 5 easier!")
+        print("If you do not get the 5 within 19 attempts, your 20th attempt is guarenteed to be the lucky number!")
+        print("Well then, what are you waiting for?\n")
+        
+        print("Well, there's nothing to lose from this...right? But gambling isn't a good idea...")
+        action = input("\nWhat do you want to do? Options: show, play, n\n").lower()
+
+        if action == "show":
+            inventory
+        
+        elif action == "play":
+            draws = 0
+            draws_left = 20 - draws
+    
+            while True:
+                draws += 1
+
+                if draws == 20:
+                    number = 5
+                else:
+                    if random.random() < 0.0005:
+                        number = 5
+                    else:
+                        number = random.randint(1, 4)
+
+                print(f"Number: {number}")
+                print(f'Draws left until guarenteed 5: {draws_left}')
+
+                if number == 5:
+                    print("Congratulations! You drew number 5.")
+                    print("Here’s your ridiculous and useless prize: a pair of socks with holes in them.")
+                    break
+
+                choice = input("Do you want to keep drawing? (y/n): ").lower()
+                if choice == "n":
+                    print("You decide to leave, this is just a game anyway.")
+                    print("You exit the room.")
+                    HallwayWest()
+                    return
+
+                elif action == "n":
+                    HallwayWest()
+                    return
+                else:
+                    print("Invalid option.")
+
+def Library():
+    while True:
+        print("\n---Library---")
 main()
-  
-## UP TO PARTYROOM - EAT
-## MAKE IT SO THEY HAVE TO EAT A NUMBER OF SLICES AND THEN THEY FAINT AND RESET THE WHOLE THING
