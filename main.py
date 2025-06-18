@@ -1,5 +1,8 @@
 import random
 
+from weapon import water_bottle, broken_bottle_holder, wine_cork, laser_pen, cookbook, coffee, lever, coin, note, helpful_casino_reminder, socks, Key1, Key2, Key3, bone
+
+
 has_entered_casino = False
 
 has_entered_kitchen = False
@@ -11,21 +14,20 @@ slices = 0
 slices_left = 8 - slices
 
 player_inventory = {
-    "water bottle": 2,
-    "broken bottle holder": 1,
-    "wine cork": 1
+    "water bottle": {"weapon": water_bottle(), "count": 2},
+    "broken bottle holder": {"weapon": broken_bottle_holder(), "count": 1},
+    "wine cork": {"weapon": wine_cork(), "count": 1}
 }
-
 def inventory():
     global player_inventory
 
     while True:
         print("\n---Inventory---\n")
         if player_inventory:
-            for item, number in player_inventory.items():
-                print(f"{item} x {number}")
+            for item, info in player_inventory.items():
+                print(f"{item} x {info['count']}")
         else:
-            print("Your inventory is empty!")
+            print("Your backpack is empty!")
             return
 
         use = input("\nWhat would you like to use? (type 'exit' to quit)\n> ").lower()
@@ -34,23 +36,22 @@ def inventory():
             return
 
         if use in player_inventory:
-            if player_inventory[use] > 0:
-                
+            if player_inventory[use]["count"] > 0:
                 if use == "water bottle":
-                    player_inventory[use] -= 1
+                    player_inventory[use]["count"] -= 1
                     print("You grab the tiny bottle of water from your pocket and drink it in one gulp.\n"
                           "Your thirst is quenched slightly, but your throat still feels dry and scratchy.")
                     print(f"\nYou used one {use}.")
-                    
-                    if player_inventory[use] == 0:
-                        print(f"\nYou have no more {use}s left. Removing it from inventory.")
+
+                    if player_inventory[use]["count"] == 0:
+                        print(f"\nYou have no more {use}s left. Removing it from your backpack.")
                         del player_inventory[use]
 
                 elif use == "broken bottle holder":
-                  print("You awkwardly wave the broken bottle holder. It's mostly useless. You wonder why you still have it.")
+                    print("You awkwardly wave the broken bottle holder. It's mostly useless. You wonder why you still have it.")
 
                 elif use == "wine cork":
-                  print("You stare at the cork. It stares back.")
+                    print("You stare at the cork. It stares back.")
                     
                 elif use == "key 1":
                   print("You take out the shiny golden key out of your backpack. The glittering '1' on the handle reflects the dull glow from the ceiling lights above you. Collect all three, and you can hopefully get out of here.")
@@ -65,13 +66,13 @@ def inventory():
                   print("The bone is cold to the touch, and quite gross to hold in your hands. You wonder where it came from. Best put it away for now.")
                   
                 elif use == "laser pen":
-                  print("You take out the small black office pen, and click the red button the side. A red laser shoots out, burning a small hole into the wall, still smoking. The yellowish wallpaper is gone, but the thick metal walls behind it remains untouched. Though you certainly can't burn through the walls, you could use this to your advantage... Well, best to put it awat for now, in case you accientally burn off one of your fingers.")
+                  print("You take out the small black office pen, and click the red button the side. A red laser shoots out, burning a small hole into the wall, still smoking. The yellowish wallpaper is gone, but the thick metal walls behind it remains untouched. Though you certainly can't burn through the walls, you could use this to your advantage... Well, best to put it away for now, in case you accientally burn off one of your fingers.")
 
                 elif use == "cookbook":
                   print("You browse the endless delicious recipes in every one of the 198 pages, intrested. Maybe you could try these recipes later.")
 
                 elif use == "coffee":
-                  print("You hold the warm cup of coffee in your hands, the aroma heavenly. You would drink it... but rememeber that you're severely allergic to coffee. A pity.")
+                  print("You hold the warm cup of coffee in your hands, the aroma heavenly. You would drink it... but remember that you're severely allergic to coffee. A pity.")
                 
                 elif use == "lever":
                   print("You pull out the small and suprisingly light metal lever from your pocket. It reminds you a bit of a Minecraft lever, and you wonder where that thought came fron. Anyway, you ponder where this could be used...")
@@ -120,14 +121,14 @@ def Cellar():
 
         if action == "show":
             inventory()
+        elif action == "n":
+            HallwayNorth()        
         elif action == "e":
             HallwayEast()
+        elif action == "s":
+            lockedRoom()        
         elif action == "w":
             HallwayWest()
-        elif action == "n":
-            HallwayNorth()
-        elif action == "s":
-            lockedRoom()
         else:
             print("You don't think you can go that way right now.")
         
@@ -167,11 +168,11 @@ def DogRoom():
     if action == "use":
 
         if "bone" not in player_inventory:
-            print("There is nothing helpful in your inventory right now, best come back later to find something suitable.")
+            print("There is nothing helpful in your backpack right now, best come back later to find something suitable.")
         
         else:
             while True:
-                print("Use what?\n\nYour Inventory:")
+                print("Use what?\n\nYour Backpack:")
                 for item, qty in player_inventory.items():
                     print(f"- {item} (x{qty})")
                 use_what = input(">")
@@ -196,6 +197,7 @@ def DogRoom():
                     print(f"You try to use the {use_what}, but it does nothing. The dog stares reproachfully at you, hungry yet still hostile.")
 
     elif action == "s":
+        print("You exit the room.")
         HallwayEast()
         return
 
@@ -217,7 +219,7 @@ def Bathroom():
         print("You approach the sink, and see a bone lying inside. It doesn't seem human...maybe it came from a butcher? Hopefully? You're unsure when you place it in your backpack.")
         print("'bone' added to our backpack.")
         player_inventory["bone"] = player_inventory.get("bone", 0) + 1
-        print("You feel like there is something hiding in here, but you don't know what. Maybe come back later when you have a few more items in your inventory that may be helpful.")
+        print("You feel like there is something hiding in here, but you don't know what. Maybe come back later when you have a few more items in your backpack that may be helpful.")
         print("\nYour updated backpack:")
         inventory()
         print("You exit the room.")
@@ -232,7 +234,7 @@ def Bathroom():
 
             if action == "use":
                 while True:
-                    print("Use what?\n\nYour Inventory:")
+                    print("Use what?\n\nYour Backpack:")
                     for item, qty in player_inventory.items():
                         print(f"- {item} (x{qty})")
                     use_what = input(">")
@@ -260,7 +262,7 @@ def Bathroom():
             else:
                 print("Invalid option.")
     else:
-        print("You feel like there is something hiding in here, but you don't know what. Maybe come back later when you have a few more items in your inventory that may be helpful.")
+        print("You feel like there is something hiding in here, but you don't know what. Maybe come back later when you have a few more items in your backpack that may be helpful.")
         print("You exit the room.")
         HallwayEast()
         return
@@ -311,7 +313,7 @@ def Cafe():
             if action == "use":
                 while True:
 
-                    print("Use what?\n\nYour Inventory:")
+                    print("Use what?\n\nYour Backpack:")
                     for item, qty in player_inventory.items():
                         print(f"- {item} (x{qty})")
                     use_what = input(">")
@@ -349,8 +351,9 @@ def Cafe():
         action = input("\nWhat do you want to do? Options: use, s\n").lower()
         
         if action == "use":
-            print("There is nothing helpful in your inventory right now, best come back later to find something suitable.")
+            print("There is nothing helpful in your backpack right now, best come back later to find something suitable.")
         elif action == "s":
+            print("You exit the room.")
             HallwayNorth()
             return
         else:
@@ -752,6 +755,7 @@ def Casino():
                     return
 
         elif action == "n":
+            print("You exit the room.")
             HallwayWest()
             return
         
@@ -765,31 +769,306 @@ def Library():
     print("\n---Library---")
 
     if has_entered_library == False:
-        print("You enter a vast library, huge wooden shelves towering to a ceiling has high as a cathedral's. The dim ceiling lights every few steps shine down in dim pathways around the shelves, stretching left and right.")
-        print("You walk up to the front desk, and unsuprisingly no one is there. You look around, unsure what to do.")
-        print("Is this librbary important? Or is this just a huge trove of knowledge randomly stashed here?\n")
+
+        has_entered_library = True
+        print("You enter a vast library, huge wooden shelves towering to a ceiling as high as a cathedral's. The dim ceiling lights every few steps shine down in dim pathways around the shelves, stretching left and right.")
+        print("You walk up to the front desk, and unsurprisingly no one is there. You look around, unsure what to do.")
+        print("Is this library important? Or is this just a huge trove of knowledge randomly stashed here?\n")
 
         print("All of a sudden, a tall woman swiftly emerges from one of the aisles, and stands behind the desks to look at you sternly.") 
         print("'Hello. What do you need?' she asks coldly, looking down at you over her pink rectangular glasses.")
-        print("You awkwardly reply that you don't know what to do here, and you mumbling something about leaving and letting her go back to what she was doin, but she cuts across you sharply.")
+        print("You awkwardly reply that you don't know what to do here, and you mumbling something about leaving and letting her go back to what she was doing, but she cuts across you sharply.")
         print("'Hmph, follow me.'\n")
 
-        print("You follow her as she walks past the bookshelves, leading you somewhere. The aisles go on endlessly, as you soon find yourslef stopping in front of aisle 97, where the librarian walks down it.")
-        print("'This is our non-fiction section. We pride ourselves with having a perfect book return rate, so EVERY. SINGLE. BOOK. should be here. There shouldn't be any missing books at all. But, in that IMPOSSIBLE event, people who fix the upheld order Please return all the books in the CORRECT PLACE when you have finsihed reading. Thank you.'")
-        print("She leaves so quickly, catching you by suprise, and by the time you turn around to look where she went, the area around you is empty.\n")
+        print("You follow her as she walks past the bookshelves, leading you somewhere. The aisles go on endlessly, as you soon find yourself stopping in front of aisle 97, where the librarian walks down it.")
+        print("'This is our non-fiction section. We pride ourselves with having a perfect book return rate, so EVERY. SINGLE. BOOK. should be here. There shouldn't be any missing books at all. But, in that IMPOSSIBLE event, people who fix the upheld order Please return all the books in the CORRECT PLACE when you have finished reading. Thank you.'")
+        print("She leaves so quickly, catching you by surprise, and by the time you turn around to look where she went, the area around you is empty.\n")
 
-        print("You walk down the aisle slowly, browing all the books with intrest. You're not sure what you're doing here, but you're intruiged enough to stay for a while longer.")
+        print("You walk down the aisle slowly, browsing all the books with interest. You're not sure what you're doing here, but you're intrigued enough to stay for a while longer.")
         print("You walk for a little longer, both ends of the aisle now out of sight, when you notice something.")
-        print("There is an small gap between two books, labelled 'Common Cooking: Edition 1' and 'Common Cooking: Edition 3' respectively.\n")
-        print("Intresting. Didn't the librarian just say that there all books were returned here? Why is there a missing book?")
+        print("There is an small gap between two books, labelled 'Common Cooking: Edition 1' and 'Common Cooking: Edition 3'.\n")
+        print("Interesting. Didn't the librarian just say that all books were returned here? Why is there a missing book?")
         print("Logically thinking, the book that belongs in the gap must be labelled 'Common Cooking: Edition 2', so where would that be?")
         print("You think about this. Maybe you should find it and return it to it's place?")
 
 
     if has_entered_library == True:
         print("You walk through the extravagant library, your footsteps echoing on the spruce planks. The vintage style lights glow softly, illuminating the covers of thousands of books each time you pass an aisle.")
-        print("")
+        print("You go straight to aisle 97, where the gap in between the two cookbooks remain.")
 
-    actions = input("\nWhat do you want to do?")
+    action = input("\nWhat do you want to do? Options: show, use, e").lower()
+    
+    if action == "show":
+        inventory()
+    elif action == "use":
 
-main()
+        if "cookbook" not in player_inventory:
+            print("There is nothing helpful in your backpack right now, best come back later to find something suitable.")
+
+        else:
+            while True:
+                print("Use what?\n\nYour backpack:")
+                for item, qty in player_inventory.items():
+                    print(f"- {item} (x{qty})")
+                use_what = input(">")
+
+                if use_what == "cookbook":
+                    
+                    player_inventory["cookbook"] -= 1
+                    if player_inventory["cookbook"] == 0:
+                        del player_inventory["cookbook"]
+                    
+                    print("You slide the cookbook into the empty slot, perfectly in line with all the other books. After a moment of silence, you hear the quietest creak of a door opening somewhere, and you look around, confused. The noise sounded like it came from the front desk, so you hurry over there. You spot the gleaming key from a distance, and begin walking quicker towards it, your hand outstretched when...\n")
+                    print("A figure, in thick, metal armour carrying a LITERAL GREATSWORD emerges from the aisle right in front of you, blocking your path. It swings its weapon dangerously towards you in an arc, and you retreat immediately, watching in pure terror and fear. The medieval visored knight’s helm blocked it's face, an empty void of darkness behind the mask.\n")
+                    print("What. Is. Happening.\n")
+                    print("How is there the most terrifying knight in existence holding a weapon RIGHT HERE. IN THIS LIBRARY.\n")
+                    print("There is no way to escape this situation...so it looks like you'll have to fight.")
+                    FIGHT()
+
+
+    elif action == "e":
+        print("You exit the room.")
+        HallwayWest()
+
+    else:
+        print("Invalid option.")
+
+
+def create_weapon(name):
+    name = name.lower()
+    weapon_classes = {
+        "water bottle": water_bottle,
+        "broken bottle holder": broken_bottle_holder,
+        "wine cork": wine_cork,
+        "key1": Key1,
+        "key2": Key2,
+        "key3": Key3,
+        "bone": bone,
+        "laser pen": laser_pen,
+        "cookbook": cookbook,
+        "coffee": coffee,
+        "lever": lever,
+        "coin": coin,
+        "note": note,
+        "helpful casino reminder": helpful_casino_reminder,
+        "socks": socks
+    }
+    cls = weapon_classes.get(name)
+    if cls:
+        return cls()
+    else:
+        print("You ran out of weapons.")
+        return None
+
+
+def TEST():
+    print("YOU RAN OUT OF WEAPONSSSSS")
+    print("You go back to the cellar.")
+    Cellar()
+
+def display_choices():
+    print("---Choose Weapon---")
+    for i, (item, info) in enumerate(player_inventory.items(), 1):
+        print(f"\n{i}. {item} x {info['count']}")
+        info["weapon"].get_stats()
+
+
+
+def FIGHT():
+    global player_inventory
+
+    player_health = 100
+    enemy_health = 100
+    stunned = False
+
+    print("You enter the battle...blah blah blah\n")
+    print("---Your enemy:---")
+    print("name: Robot Knight")
+    print("weapon: Greatsword")
+    print("damage: 30")
+    print("chance of stunning itself for one turn: 20%\n")
+    print("===You begin===\n")
+
+    choice_num = 1
+    turn_num = 1
+
+    def show_choices():
+        print(f"===Choice {choice_num}===\n")
+        print("---Choose Weapon---\n")
+        for i, (item, info) in enumerate(player_inventory.items(), start=1):
+            print(f"{i}. {item} x {info['count']}")
+            info["weapon"].get_stats()
+            print()
+
+    def get_weapon_choice():
+        while True:
+            try:
+                choice = int(input("(choose weapon by number)\n> "))
+                keys = list(player_inventory.keys())
+                if 1 <= choice <= len(keys):
+                    return keys[choice - 1]
+                else:
+                    print("Invalid choice.")
+            except:
+                print("Invalid input.")
+
+    while player_health > 0 and enemy_health > 0:
+
+        if not player_inventory:
+            print("You ran out of weapons.")
+            print("Dang, maybe try again when you have more weapons.")
+            TEST()
+            
+
+        show_choices()
+        weapon = get_weapon_choice()
+        print(f"\n==Your Turn {turn_num}==\n")
+        print(f"Your health = {player_health}")
+        print(f"Enemy health = {enemy_health}\n")
+
+        # Player turn
+        if weapon == "water bottle":
+            crit = random.random() < 0.8
+            dmg = 30 if crit else 10
+            enemy_health -= dmg
+            print(f"You use the water bottle. {'It crit!' if crit else 'It does 10 damage.'} It deals {dmg} damage.\n")
+
+        elif weapon == "broken bottle holder":
+            crit = random.random() < 0.25
+            dmg = 70 if crit else 20
+            enemy_health -= dmg
+            print(f"You use the broken bottle holder. {'It crit!' if crit else 'It does 20 damage.'} It deals {dmg} damage.\n")
+
+        elif weapon == "wine cork":
+            crit = random.random() < 0.99
+            dmg = 2 if crit else 1
+            enemy_health -= dmg
+            print(f"You use the wine cork. {'It crit!' if crit else 'It does 1 damage.'} It deals {dmg} damage.\n")
+
+        elif weapon in ["key1", "key2", "key3"]:
+            stunned = True
+            print(f"You use {weapon}. It deals no damage, but your opponent is stunned for 1 turn, so you get to go again.\n")
+
+        elif weapon == "bone":
+            crit = random.random() < 0.40
+            dmg = 30 if crit else 20
+            enemy_health -= dmg
+            print(f"You use the bone. {'It crit!' if crit else 'It does 20 damage.'} It deals {dmg} damage.\n")
+
+        elif weapon == "laser pen":
+            rebound = random.random() < 0.45
+            if rebound:
+                player_health -= 50
+                print("You use the laser pen. It rebounds onto you! You take 50 damage.\n")
+            else:
+                enemy_health -= 50
+                print("You use the laser pen. It deals 50 damage.\n")
+
+        elif weapon == "cookbook":
+            stun = random.random() < 0.20
+            enemy_health -= 15
+            print("You use the cookbook. It deals 15 damage.")
+            if stun:
+                stunned = True
+                print("The enemy is stunned!\n")
+            else:
+                print()
+
+        elif weapon == "coffee":
+            rebound = random.random() < 0.95
+            if rebound:
+                player_health -= 80
+                print("You use the coffee. It rebounds onto you! You take 80 damage.\n")
+            else:
+                enemy_health -= 80
+                print("You use the coffee. It deals 80 damage.\n")
+
+        elif weapon == "lever":
+            crit = random.random() < 0.10
+            dmg = 45 if crit else 10
+            enemy_health -= dmg
+            print(f"You use the lever. {'It crit!' if crit else 'It does 10 damage.'} It deals {dmg} damage.\n")
+
+        elif weapon == "coin":
+            crit = random.random() < 0.85
+            dmg = 10 if crit else 5
+            enemy_health -= dmg
+            print(f"You use the coin. {'It crit!' if crit else 'It does 5 damage.'} It deals {dmg} damage.\n")
+
+        elif weapon == "note":
+            stun = random.random() < 0.05
+            print("You use the note. It does no damage.")
+            if stun:
+                stunned = True
+                print("But it stuns the enemy!\n")
+            else:
+                print()
+
+        elif weapon == "helpful casino reminder":
+            stun = random.random() < 0.35
+            print("You use the helpful casino reminder. It does no damage.")
+            if stun:
+                stunned = True
+                print("But it stuns the enemy!\n")
+            else:
+                print()
+
+        elif weapon == "socks":
+            crit = random.random() < 0.75
+            dmg = 20 if crit else 15
+            enemy_health -= dmg
+            print(f"You use the socks. {'It crit!' if crit else 'It does 15 damage.'} It deals {dmg} damage.\n")
+
+        else:
+            # default fallback
+            dmg = player_inventory[weapon]["weapon"].damage
+            enemy_health -= dmg
+            print(f"You use {weapon}. It deals {dmg} damage.\n")
+
+        print(f"Your health = {player_health}")
+        print(f"Enemy health = {enemy_health}\n")
+
+        if enemy_health <= 0:
+            break
+
+        # Enemy turn
+        if not stunned:
+            print(f"==Enemy Turn {turn_num}==\n")
+            print(f"Your health = {player_health}")
+            print(f"Enemy health = {enemy_health}\n")
+
+            miss = random.random() < 0.2
+            if miss:
+                print("The enemy tries to hit you, but misses. It is stunned for 1 turn.\n")
+                stunned = True
+            else:
+                player_health -= 30
+                print("The enemy hits you once with its greatsword. It deals 30 damage.\n")
+
+            print(f"Your health = {player_health}")
+            print(f"Enemy health = {enemy_health}\n")
+        else:
+            stunned = False
+            print(f"==Enemy Turn {turn_num}==\n")
+            print(f"Your health = {player_health}")
+            print(f"Enemy health = {enemy_health}\n")
+            print("The enemy tries to hit you, but misses. It is stunned for 1 turn.\n")
+            print(f"Your health = {player_health}")
+            print(f"Enemy health = {enemy_health}\n")
+
+        # Remove used item
+        player_inventory[weapon]["count"] -= 1
+        if player_inventory[weapon]["count"] <= 0:
+            del player_inventory[weapon]
+
+        turn_num += 1
+        choice_num += 1
+
+    if player_health > 0:
+        print("=====Congratulations, you won!===\n")
+        print("You defeated the evil knight, and now you won the prize! ")
+    else:
+        print("===You lost!===")
+
+
+FIGHT()
