@@ -4,6 +4,8 @@ has_entered_casino = False
 
 has_entered_kitchen = False
 
+has_entered_library = False
+
 party_room_cake = False
 slices = 0
 slices_left = 8 - slices
@@ -66,7 +68,7 @@ def inventory():
                   print("You take out the small black office pen, and click the red button the side. A red laser shoots out, burning a small hole into the wall, still smoking. The yellowish wallpaper is gone, but the thick metal walls behind it remains untouched. Though you certainly can't burn through the walls, you could use this to your advantage... Well, best to put it awat for now, in case you accientally burn off one of your fingers.")
 
                 elif use == "cookbook":
-                  print("You browse the endless delicious recipes in the cokbook, your stomach rumbling in longing. You can't look for even a few seconds before you realise how hungry you are. You put the book away, trying your best to not be distracted.")
+                  print("You browse the endless delicious recipes in every one of the 198 pages, intrested. Maybe you could try these recipes later.")
 
                 elif use == "coffee":
                   print("You hold the warm cup of coffee in your hands, the aroma heavenly. You would drink it... but rememeber that you're severely allergic to coffee. A pity.")
@@ -512,7 +514,6 @@ def HallwayWest():
         else:
             print("You don't think you can go that way right now.")
 
-
 def Kitchen():
 
     pizza_margherita = ["thin", "tomato", "mozzarell", "basil"]
@@ -523,111 +524,117 @@ def Kitchen():
 
     print("\n---Kitchen---")
 
-    if has_entered_kitchen == True:
-        print("You enter a huge kitchen with a gleaming marble counter and vintage wall lights.")
-        print("You see the ingredients that you found were piled on the counter. You probably should make the pizza for the cookbook...")
+    if "cookbook" in player_inventory:
+        print("You enter the huge kitchen and see the empty case where the cookbook was. You like this room; making pizza is fun, and it gave you a lot of food to fill you back up.")
+        print("There is nothing left to do in the room.")
+        HallwayWest()
+        return
 
-    if has_entered_kitchen == False:
-        print("You enter a huge kitchen with a gleaming marble counter and vintage wall lights. There is a sticky note on the counter that says:\n")
-        print("'Make and deliver me a pizza, and the code to the cookbook is yours.'\n")
-        print("You look around the pristine kitchen, and notice on a table in a corner is a small see-through case is a cookbook. The case is extremely sturdy and doesn't break when you apply force to it, so it seems the only way to acquire the cookbook is the enter a 4 digit code on the side of the case.")
-        print("The cookbook seems to be specifically 198 pages, with a light blue hardcover that has a cartoon of a fruit bowl on top of it.")
-        print("You're unsure why you need a cookbook exactly, but it could be important later, you suppose.")
-        print("You look back at the note, thinking.")
-        print("You don't know who this 'me' person the note could be addressing, but you don't want to mess up this pizza and getting into more trouble.\n")
-        print("You look into all the shelves and cupboards, and eventually have a small collection of ingredients available.")
+    if "cookbook" not in player_inventory:
+        if has_entered_kitchen == True:
+            print("You enter the huge kitchen with a gleaming marble counter and vintage wall lights.")
+            print("You see the ingredients that you found were piled on the counter. You probably should make the pizza for the cookbook...")
 
-    while True:
-        pizza = []
-
-
-        action = input("\nWhat do you want to do? Options: show, cook, s\n").lower()
-
-        if action == "show":
-            inventory()
-        elif action == "cook":
-            print("You know 3 basic pizza recipes: margherita, pepperoni and cheese.")
-            print("There is only enough dough to make one pizza, so choose one to make and use the correct ingredients.")
-            print("You will add the ingredients in the order: dough, sauce, cheese, toppings\n")
+        if has_entered_kitchen == False:
+            has_entered_kitchen = True
+            print("You enter a huge kitchen with a gleaming marble counter and vintage wall lights. There is a sticky note on the counter that says:\n")
+            print("'Make and deliver me a pizza, and the code to the cookbook is yours.'\n")
+            print("You look around the pristine kitchen, and notice on a table in a corner is a small see-through case is a cookbook. The case is extremely sturdy and doesn't break when you apply force to it, so it seems the only way to acquire the cookbook is the enter a 4 digit code on the side of the case.")
+            print("The cookbook seems to be specifically 198 pages, with a light blue hardcover that has a cartoon of a fruit bowl on top of it. It's labelled 'Common Cooking Skills: Edition 2'")
+            print("You're unsure why you need a cookbook exactly, but it could be important later, you suppose.")
+            print("You look back at the note, thinking.")
+            print("You don't know who this 'me' person the note could be addressing, but you don't want to mess up this pizza and getting into more trouble.\n")
+            print("You look into all the shelves and cupboards, and eventually have a small collection of ingredients available.")
             
-            print("Recipes:")
-            print("Margherita: thin, tomato, mozzarella, basil")
-            print("Pepperoni: thick, tomato, parmesan, pepperoni")
-            print("Cheese: thin, tomato, provolone, none\n")
 
-            print("-Dough options-")
-            
-            while True:
-                dough = input("thin/thick: ").lower()
-                if dough in ["thin", "thick"]:
-                    pizza.append(dough)
-                    break
-                else:
-                    print("Invalid option.")
+        while True:
+            pizza = []
 
-            print("-Sauce-")
-            while True:
-                sauce = input("avocado, tomato, banana: ").lower()
-                if sauce in ["avocado", "tomato", "banana"]:
-                    pizza.append(sauce)
-                    break
-                else:
-                    print("Invalid option.")
 
-            print("-Cheese-")
-            while True:
-                cheese = input("mozzarella, parmesan, provolone: ").lower()
-                if cheese in ["mozzarella", "parmesan", "provolone"]:
-                    pizza.append(cheese)
-                    break
-                else:
-                    print("Invalid option.")
+            action = input("\nWhat do you want to do? Options: show, cook, s\n").lower()
 
-            print("-Toppings-")
-            while True:
-                toppings = input("pepperoni, basil, none: ").lower()
-                if toppings in ["pepperoni", "basil", "none"]:
-                    pizza.append(toppings)
-                    break
-                else:
-                    print("Invalid option.")
-
-            print("\nYou finished making the pizza.")
-            print(f'Your pizza: {",".join(pizza)}')
-
-            if pizza == pizza_margherita:
-                print(f'Margherita: {",".join(pizza_margherita)}')
-                kitchen_cooked()
-                break
-            elif pizza == pizza_pepperoni:
-                print(f'Pepperoni: {",".join(pizza_pepperoni)}')
-                kitchen_cooked()
-                break
-            elif pizza == pizza_cheese:
-                print(f'Cheese: {",".join(pizza_cheese)}')
-                kitchen_cooked()
-                break
-
-            else:
-                print("It seems you messed up your pizza somehow. Hmm.")
-                print("Well, you've used your ingredients, but you're not sure what to do...\n")
+            if action == "show":
+                inventory()
+            elif action == "cook":
+                print("You know 3 basic pizza recipes: margherita, pepperoni and cheese.")
+                print("There is only enough dough to make one pizza, so choose one to make and use the correct ingredients.")
+                print("You will add the ingredients in the order: dough, sauce, cheese, toppings\n")
                 
-                print("Suddently, you hear a loud THUNK behind you, and you see more ingredients somehow appeared behind you onto the central table, the exact amount that you used for your pizza.")
-                print("You have no idea how the ingredients have appeared (perhaps it fell from the ceiling? But there doesn't seem to be any trapdoor up there), but there's no point of thinking about it.")
-                print("You eat your pizza, filling full for the first time in a long time.")
+                print("Recipes:")
+                print("Margherita: thin, tomato, mozzarella, basil")
+                print("Pepperoni: thick, tomato, parmesan, pepperoni")
+                print("Cheese: thin, tomato, provolone, none\n")
 
-                print("Do you want to try to make another pizza, or leave?")
+                print("-Dough options-")
+                
+                while True:
+                    dough = input("thin/thick: ").lower()
+                    if dough in ["thin", "thick"]:
+                        pizza.append(dough)
+                        break
+                    else:
+                        print("Invalid option.")
 
+                print("-Sauce-")
+                while True:
+                    sauce = input("avocado, tomato, banana: ").lower()
+                    if sauce in ["avocado", "tomato", "banana"]:
+                        pizza.append(sauce)
+                        break
+                    else:
+                        print("Invalid option.")
+
+                print("-Cheese-")
+                while True:
+                    cheese = input("mozzarella, parmesan, provolone: ").lower()
+                    if cheese in ["mozzarella", "parmesan", "provolone"]:
+                        pizza.append(cheese)
+                        break
+                    else:
+                        print("Invalid option.")
+
+                print("-Toppings-")
+                while True:
+                    toppings = input("pepperoni, basil, none: ").lower()
+                    if toppings in ["pepperoni", "basil", "none"]:
+                        pizza.append(toppings)
+                        break
+                    else:
+                        print("Invalid option.")
+
+                print("\nYou finished making the pizza.")
+                print(f'Your pizza: {",".join(pizza)}')
+
+                if pizza == pizza_margherita:
+                    print(f'Margherita: {",".join(pizza_margherita)}')
+                    kitchen_cooked()
+                    break
+                elif pizza == pizza_pepperoni:
+                    print(f'Pepperoni: {",".join(pizza_pepperoni)}')
+                    kitchen_cooked()
+                    break
+                elif pizza == pizza_cheese:
+                    print(f'Cheese: {",".join(pizza_cheese)}')
+                    kitchen_cooked()
+                    break
+
+                else:
+                    print("It seems you messed up your pizza somehow. Hmm.")
+                    print("Well, you've used your ingredients, but you're not sure what to do...\n")
                     
-                    
-        elif action == "s":
-            print("You exit the room.")
-            HallwayWest()
-            return
-        
-        else:
-            print("Invalid option")
+                    print("Suddently, you hear a loud THUNK behind you, and you see more ingredients somehow appeared behind you onto the central table, the exact amount that you used for your pizza.")
+                    print("You have no idea how the ingredients have appeared (perhaps it fell from the ceiling? But there doesn't seem to be any trapdoor up there), but there's no point of thinking about it.")
+                    print("You eat your pizza, filling full for the first time in a long time.")
 
+                    print("Do you want to try to make another pizza, or leave?")
+                        
+            elif action == "s":
+                print("You exit the room.")
+                HallwayWest()
+                return
+            
+            else:
+                print("Invalid option")
             
 def kitchen_cooked():
 
@@ -637,29 +644,17 @@ def kitchen_cooked():
     print("It reads:")
     print("'Thank you for the pizza! It's really good :D")
     print("Anyway, here's the 4 digit code to the case to access the cookbook:")
-    print("4196")
+    print("4196'\n")
+    print("You turn around and walk towards the locked case, and input '4196'. The lock clicks open and you take the very specific 198 page cookbook, pleased.")
+    
+    player_inventory["cookbook"] = player_inventory.get("cookbook", 0) + 1
 
-##------------------FINISH THIS, AND ALSO DEF KITCHEN IF COOKBOOK IN PLAYER_INVENTORY
-
-
-
-    action = input("\nWhat do you want to do? Options: show, s\n").lower()
-
-    print("You know 3 basic pizza recipes: margherita, pepperoni and cheese.")
-    print("There is only enough dough to make one pizza, so choose one to make and use the correct ingredients.")
-    print("You will add the ingredients in the order: dough, sauce, cheese, ingredients\n")
-
-
-    print("Recipes:")
-    print("Margherita: thin, tomato, mozzarella, basil")
-    print("Pepperoni: thick, tomato, parmesan, pepperoni")
-    print("Cheese: thin, tomato, provolone, none\n")
-
-    print("Do you want to")
-
-
-
-
+    print("'cookbook' added to your backpack.")
+    print("\nYour updated backpack:")
+    inventory()
+    print("\nThere is nothing left to do here. You exit the room.")
+    HallwayWest()
+    return
 
 def Casino():
     global random
@@ -764,6 +759,37 @@ def Casino():
             print("Invalid option.")
 
 def Library():
-    while True:
-        print("\n---Library---")
+
+    global has_entered_library
+
+    print("\n---Library---")
+
+    if has_entered_library == False:
+        print("You enter a vast library, huge wooden shelves towering to a ceiling has high as a cathedral's. The dim ceiling lights every few steps shine down in dim pathways around the shelves, stretching left and right.")
+        print("You walk up to the front desk, and unsuprisingly no one is there. You look around, unsure what to do.")
+        print("Is this librbary important? Or is this just a huge trove of knowledge randomly stashed here?\n")
+
+        print("All of a sudden, a tall woman swiftly emerges from one of the aisles, and stands behind the desks to look at you sternly.") 
+        print("'Hello. What do you need?' she asks coldly, looking down at you over her pink rectangular glasses.")
+        print("You awkwardly reply that you don't know what to do here, and you mumbling something about leaving and letting her go back to what she was doin, but she cuts across you sharply.")
+        print("'Hmph, follow me.'\n")
+
+        print("You follow her as she walks past the bookshelves, leading you somewhere. The aisles go on endlessly, as you soon find yourslef stopping in front of aisle 97, where the librarian walks down it.")
+        print("'This is our non-fiction section. We pride ourselves with having a perfect book return rate, so EVERY. SINGLE. BOOK. should be here. There shouldn't be any missing books at all. But, in that IMPOSSIBLE event, people who fix the upheld order Please return all the books in the CORRECT PLACE when you have finsihed reading. Thank you.'")
+        print("She leaves so quickly, catching you by suprise, and by the time you turn around to look where she went, the area around you is empty.\n")
+
+        print("You walk down the aisle slowly, browing all the books with intrest. You're not sure what you're doing here, but you're intruiged enough to stay for a while longer.")
+        print("You walk for a little longer, both ends of the aisle now out of sight, when you notice something.")
+        print("There is an small gap between two books, labelled 'Common Cooking: Edition 1' and 'Common Cooking: Edition 3' respectively.\n")
+        print("Intresting. Didn't the librarian just say that there all books were returned here? Why is there a missing book?")
+        print("Logically thinking, the book that belongs in the gap must be labelled 'Common Cooking: Edition 2', so where would that be?")
+        print("You think about this. Maybe you should find it and return it to it's place?")
+
+
+    if has_entered_library == True:
+        print("You walk through the extravagant library, your footsteps echoing on the spruce planks. The vintage style lights glow softly, illuminating the covers of thousands of books each time you pass an aisle.")
+        print("")
+
+    actions = input("\nWhat do you want to do?")
+
 main()
