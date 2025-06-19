@@ -2,8 +2,6 @@ import random
 
 from weapon import water_bottle, broken_bottle_holder, wine_cork, laser_pen, cookbook, coffee, lever, coin, note, helpful_casino_reminder, socks, Key1, Key2, Key3, bone
 
-all_keys =
-
 has_entered_casino = False
 
 has_entered_kitchen = False
@@ -15,6 +13,8 @@ UNFINSIHED_FIGHT = False
 party_room_cake = False
 slices = 0
 slices_left = 8 - slices
+
+key_count = 0
 
 player_inventory = {
     "water bottle": {"weapon": water_bottle(), "count": 2},
@@ -137,34 +137,82 @@ def Cellar():
 
 def LockedRoom():
     
+    global key_count
+
+    keys_left = 3 - key_count
+
     print ("\n---Locked Room---\n")
 
-    print("You try to open the locked door, but it doesn't budge at all. The three keyholes labelled '1', '2', and '3' above the handle show that there you must have 3 keys to open the door.\n")
+    print("You try to open the locked door, but it doesn't budge at all. The three keyholes labelled '1', '2', and '3' above the handle show that there you must have all 3 keys to open the door.\n")
 
-    if "key1" in player_inventory and "key2" in player_inventory and "key3" in player_inventory:
+    if key_count == 3:
         print("You have all 3 keys in your backpack.")
 
-        while True:
-            action = input("\nWhat do you want to do? Options: show, open, n\n").lower()
+    else:
+        if keys_left == 1:
+            print(f'You have {key_count} keys. You need {keys_left} key left to find')
+        else:
+            print(f'You have {key_count} keys. You need {keys_left} keys left to find')
 
-            if action == "show":
-                inventory()
-            elif action == "open":
-                print("DANG")
-            elif action == "n":
-                Cellar()
+    while True:
+        action = input("\nWhat do you want to do? Options: show, open, n\n").lower()
+
+        if action == "show":
+            inventory()
+        elif action == "open":
+            if key_count == 3:
+                print("\nYou open the door.")
+                DIAMOND_ROOM()
             else:
-                print("Invalid option.")
+                print("You do not have enough keys.")
+                print("You should search for them.")
+                print("You return to the cellar.")
+                Cellar()
+                return
+
+        elif action == "n":
+            Cellar()
+            return
+        else:
+            print("Invalid option.")
     
-    if "key1" in player_inventory and "key2" in player_inventory and "key3" not in player_inventory:
-        print("You seem to be missing a key...have you tried going into the west hallway?")
+def DIAMOND_ROOM():
+    print("You enter a really small room with walls coated in black paint, so it seems like entering a void of emptiness.")
+    print("In front of you on a table covered by a black table cloth is a large metal safe, with no opening you can see.")
+    print("You're sure the thing in the same must be able to help you escape, but you don't know how. How could you break a safe like this? It seems indestructible.")
+    print("Hey...what about you try you laser pen? There's no harm in trying.")
+    print("But you leave the door open behind you, just in case.")
 
-    elif "key1" in player_inventory and "key3" in player_inventory and "key2" not in player_inventory:
-        print("You seem to be missing a key...have you tried going into the north hallway?")
+    while True:
+        action = input("\nWhat do you want to do? Options: use\n").lower()
+        if action == "use":
+            while True:
+                print("Use what?\n\nYour Backpack:")
+                for item, qty in player_inventory.items():
+                    print(f"- {item} (x{qty})")
+                use_what = input(">")
 
-    elif "key2" in player_inventory and "key3" in player_inventory and "key1" not in player_inventory:
-        print("You seem to be missing a key...have you tried going into the east hallway?")
+                if use_what == "laser pen":
 
+                    print("You aim the laser pointer at the the safe, and turn it on. The bright beam of red blinds you for a second, but you hold it steadily and try to sear the side off it.")
+                    print("After a little while, you see the heat damage the safe slowly, and after a long time the side of the safe falls off (finally, your arms are getting tired!) and you peer inside the safe cautiously.")
+                    print("Inside is a huge round cut diamond on a triangular stand, bigger than your head.")
+                    print("You carefully take it out by the stand, and push the safe of the table to marvel at the jewel.")
+                    print("It seems to shine millions of nonexistent colours across the walls from the dim light of the cellar behind you, and it gives you instant hope and calm.")
+
+                    if "helpful casino reminder" in player_inventory:
+                        print("(Ha, that helpful casino reminder was WRONG, I have plenty of hope!!!)")
+
+                    print("You have no idea whay this diamond is doing here, and how it'll help you escape, but you should try something. You reach your hand tentatively to touch itm when...")
+
+#----------------------------------------------------------------------
+            
+
+
+
+    print("In front of you on a table covered by a black table cloth is a huge round cut diamond, bigger than your head. It seems to shine millions of nonexistent colours across the walls from the dim light of the cellar behind you.")
+    print("You have no idea whay this diamond is doing here, and how it'll help you escape, but you should try something. Maybe touch it?")
+    print("You leave the door open behind you, just in case.")
         
 def HallwayEast():
     print("\n---HallwayEast---")
@@ -185,6 +233,9 @@ def HallwayEast():
             print("You don't think you can go that way right now.")
 
 def DogRoom():
+
+    global key_count
+    
     print("\n---Dog Room---")
 
     if "laser pen" in player_inventory:
@@ -221,6 +272,8 @@ def DogRoom():
 
                     player_inventory["key 1"] = player_inventory.get("key 1", 0) + 1
                     player_inventory["laser pen"] = player_inventory.get("laser pen", 0) + 1
+
+                    key_count = key_count + 1
 
                     print("You used the bone. 'key 1' and 'laser pen' added to your backpack.")
                     print("\nYour updated backpack:")
@@ -281,6 +334,7 @@ def Bathroom():
                             del player_inventory["lever"]
 
                         player_inventory["key 2"] = player_inventory.get("key 2", 0) + 1
+                        key_count = key_count + 1
 
                         print("You used the lever. 'key 2' added to your backpack.")
                         print("\nYour updated backpack:")
@@ -462,6 +516,13 @@ def PartyRoom():
     global slices
     global slices_left
     global player_inventory
+
+    global has_entered_casino
+    global has_entered_kitchen
+    global has_entered_library
+    global UNFINSIHED_FIGHT
+
+    global key_count
     
     print("---PartyRoom---")
 
@@ -518,6 +579,16 @@ def PartyRoom():
                     "wine cork": 1
                 }
                 party_room_cake = True
+
+                has_entered_casino = False
+
+                has_entered_kitchen = False
+
+                has_entered_library = False
+
+                UNFINSIHED_FIGHT = False
+
+                key_count = 0
 
                 main()
                 return
@@ -805,12 +876,12 @@ def Library():
 
     print("\n---Library---")
 
-    if "key3" in player_inventory:
+    if "key 3" in player_inventory:
         print("You push against the door to library, but it doesn't budge. Well, you certainly don't want to go in and see the creepy robot again, so you leave the door as it is.")
         print("You are in the west hallway.")
         HallwayWest()
 
-    if "key3" not in player_inventory:
+    if "key 3" not in player_inventory:
 
         if UNFINSIHED_FIGHT == True:
             print("You enter the library cautiously, peering around the door looking for the knight. They're there, watching you, standing in front of the front desk where the key is.")
@@ -892,9 +963,9 @@ def create_weapon(name):
         "water bottle": water_bottle,
         "broken bottle holder": broken_bottle_holder,
         "wine cork": wine_cork,
-        "key1": Key1,
-        "key2": Key2,
-        "key3": Key3,
+        "key 1": Key1,
+        "key 2": Key2,
+        "key 3": Key3,
         "bone": bone,
         "laser pen": laser_pen,
         "cookbook": cookbook,
@@ -989,7 +1060,7 @@ def FIGHT():
             enemy_health -= dmg
             print(f"You use the wine cork. {'It crit!' if crit else 'It does 1 damage.'} It deals {dmg} damage.\n")
 
-        elif weapon in ["key1", "key2", "key3"]:
+        elif weapon in ["key 1", "key 2", "key 3"]:
             stunned = True
             print(f"You use {weapon}. It deals no damage, but your opponent is stunned for 1 turn, so you get to go again.\n")
 
@@ -1119,7 +1190,12 @@ def FIGHT_WON():
     print("You see the small '3' indented on it, and you put it into your backpack.")
     print("While the knight is unconcious, you grab all the items you've used and thrown, thankfully all in tact, and put them back into your backpack.\n")
 
-    print("'key3' added to your backpack.")
+    print("'key 3' added to your backpack.")
+    player_inventory["key 3"] = player_inventory.get("key 3", 0) + 1
+
+    key_count = key_count + 1
+
+
     print("\nYour updated backpack:")
     inventory()
 
