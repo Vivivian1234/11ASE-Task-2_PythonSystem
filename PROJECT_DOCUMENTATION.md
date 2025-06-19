@@ -2668,3 +2668,4 @@ The game was well made with all the code constantly updating for the player's be
 
 Only thing I would suggest is maybe a more distibuted story and difficulty between the 3 keys, as they vary a lot in skill and it may be a bit challenging. Starting off with only a few sentences on screen to tens of the them in a single room did make it hard to read sometimes and dfficult to rememeber infomations and leading to less attention from users.
 
+
