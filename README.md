@@ -13,7 +13,6 @@ You may view all you items in your backpack, which can be accessed by typing "sh
 There will be a turn-based combat system in this game, and it relies on the items in your inventory, so be careful!
 
 
-
 P.S. If you are playing this game, a lot of text may appear on your screen at once, and even with the console window the the largest, you may have to scroll up to start reading from the top.
 
 THIS IS EXTREMELY IMPORTANT IN THESE ROOMS: Library, Kitchen
@@ -22,8 +21,9 @@ This note is ESSENTIAL when you are in combat, as it may lead to confusion and a
 
 It would be preferable if you did this every time for the best experience (example: Casino).
 
-Thank you.
+Thank you!
 
+![MAP](/images.py/MAP.png)
 
 Map:
 
