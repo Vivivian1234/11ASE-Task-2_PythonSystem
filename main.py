@@ -2,12 +2,15 @@ import random
 
 from weapon import water_bottle, broken_bottle_holder, wine_cork, laser_pen, cookbook, coffee, lever, coin, note, helpful_casino_reminder, socks, Key1, Key2, Key3, bone
 
+all_keys =
 
 has_entered_casino = False
 
 has_entered_kitchen = False
 
 has_entered_library = False
+
+UNFINSIHED_FIGHT = False
 
 party_room_cake = False
 slices = 0
@@ -60,7 +63,7 @@ def inventory():
                   print("You take out the shiny golden key out of your backpack. The glittering '2' on the handle reflects the dull glow from the ceiling lights above you. Collect all three, and you can hopefully get out of here.")
                 
                 elif use == "key 3":
-                  print("You take out the shiny golden key out of your backpack. The glittering '3' on the handle reflects the dull glow from the ceiling lights above you. Collect all three, and you can hopefully get out of here.")
+                  print("You take out the shiny golden key out of your backpack. The glittering '3' on the handle reflects the dull glow from the ceiling lights above you. Collect all three, and hopefully you can use them to get into the locked room by the cellar to get out of here.")
 
                 elif use == "bone":
                   print("The bone is cold to the touch, and quite gross to hold in your hands. You wonder where it came from. Best put it away for now.")
@@ -113,10 +116,10 @@ def main():
   Cellar()
 
 def Cellar():
-
-    while True:
-        print("\n---The Cellar---")
-        print("There are 3 hallways in front of you. One to the north, east and west. To the south is a locked door with 3 keyholes in it. Perhaps that is the way out. You should find the 3 keys to the door as soon as possible.")
+    print("\n---The Cellar---")
+    print("There are 3 hallways in front of you. One to the north, east and west. To the south is a locked door with 3 keyholes in it. Perhaps that is the way out. You should find the 3 keys to the door as soon as possible.")
+    
+    while True:        
         action = input("\nWhat do you want to do? Options: show, n, e, s, w\n").lower()
 
         if action == "show":
@@ -126,17 +129,49 @@ def Cellar():
         elif action == "e":
             HallwayEast()
         elif action == "s":
-            lockedRoom()        
+            LockedRoom()        
         elif action == "w":
             HallwayWest()
         else:
             print("You don't think you can go that way right now.")
+
+def LockedRoom():
+    
+    print ("\n---Locked Room---\n")
+
+    print("You try to open the locked door, but it doesn't budge at all. The three keyholes labelled '1', '2', and '3' above the handle show that there you must have 3 keys to open the door.\n")
+
+    if "key1" in player_inventory and "key2" in player_inventory and "key3" in player_inventory:
+        print("You have all 3 keys in your backpack.")
+
+        while True:
+            action = input("\nWhat do you want to do? Options: show, open, n\n").lower()
+
+            if action == "show":
+                inventory()
+            elif action == "open":
+                print("DANG")
+            elif action == "n":
+                Cellar()
+            else:
+                print("Invalid option.")
+    
+    if "key1" in player_inventory and "key2" in player_inventory and "key3" not in player_inventory:
+        print("You seem to be missing a key...have you tried going into the west hallway?")
+
+    elif "key1" in player_inventory and "key3" in player_inventory and "key2" not in player_inventory:
+        print("You seem to be missing a key...have you tried going into the north hallway?")
+
+    elif "key2" in player_inventory and "key3" in player_inventory and "key1" not in player_inventory:
+        print("You seem to be missing a key...have you tried going into the east hallway?")
+
         
 def HallwayEast():
-
-    while True:
-        print("\n---HallwayEast---")
-        print("There are two rooms down this hallway. A dog room to the north and a bathroom continuing east. You can also return to the cellar back to the west.")
+    print("\n---HallwayEast---")
+    print("There are two rooms down this hallway. A dog room to the north and a bathroom continuing east. You can also return to the cellar back to the west.")
+    
+    while True:        
+        
         action = input("\nWhat do you want to do? Options: show, n, e, w\n").lower()
         if action == "show":
             inventory()
@@ -268,10 +303,10 @@ def Bathroom():
         return
 
 def HallwayNorth():
-
-    while True:
-        print("\n---HallwayNorth---")
-        print("There are three rooms down this hallway. A party room to the east, a bedroom with a messy sign with 'Andy' scribbled on it to the west, and a cafe continuing north. You can also return to the cellar back to the south.")
+    print("\n---HallwayNorth---")
+    print("There are three rooms down this hallway. A party room to the east, a bedroom with a messy sign with 'Andy' scribbled on it to the west, and a cafe continuing north. You can also return to the cellar back to the south.")
+        
+    while True:    
         action = input("\nWhat do you want to do? Options: show, n, e, s, w\n").lower()
         if action == "show":
           inventory()
@@ -307,40 +342,41 @@ def Cafe():
             print("A barista with calm, blank eyes greets you, staring into your eyes with something less than human.")
             print("'Greetings, I am Friendly Barista. Would you like buy some coffee? It's one Cuppa Coin.'")
             print("You see the huge coin drawing behind him on the wall, silver with a coffee cup engraved on it. The coin Andy gave you is identical.")
-            
-            action = input("\nWhat do you want to do? Options: use, s\n").lower()
+        
+            while True:
+                action = input("\nWhat do you want to do? Options: use, s\n").lower()
 
-            if action == "use":
-                while True:
+                if action == "use":
+                    while True:
 
-                    print("Use what?\n\nYour Backpack:")
-                    for item, qty in player_inventory.items():
-                        print(f"- {item} (x{qty})")
-                    use_what = input(">")
-                    
-                    if use_what == "coin":
-                        print("You hand over the small coin, and Friendly Baraista gives you piping hot coffee in a simple paper cup. You gladly accept the coffee and hold on to it. You can't drink it, because you just so happened to be allergic to coffee. Oh well, at least it's warm. You put it away. \n")
+                        print("Use what?\n\nYour Backpack:")
+                        for item, qty in player_inventory.items():
+                            print(f"- {item} (x{qty})")
+                        use_what = input(">")
                         
-                        player_inventory["coin"] -= 1
-                        if player_inventory["coin"] == 0:
-                            del player_inventory["coin"]
+                        if use_what == "coin":
+                            print("You hand over the small coin, and Friendly Baraista gives you piping hot coffee in a simple paper cup. You gladly accept the coffee and hold on to it. You can't drink it, because you just so happened to be allergic to coffee. Oh well, at least it's warm. You put it away. \n")
+                            
+                            player_inventory["coin"] -= 1
+                            if player_inventory["coin"] == 0:
+                                del player_inventory["coin"]
 
-                        player_inventory["coffee"] = player_inventory.get("coffee", 0) + 1
+                            player_inventory["coffee"] = player_inventory.get("coffee", 0) + 1
 
-                        print("You used the coin. 'coffee' added to your backpack.")
-                        print("\nYour updated backpack:")
-                        inventory()
-                        print("\nThere is nothing left to do here. You exit the room.")
-                        HallwayNorth()
-                        return
-                    else:
-                        print(f"You try to use the {use_what}, but it does nothing. Friendly Barista stares at you, smiling.")
-            elif action == "s":
-                print("You exit the room.")
-                HallwayNorth()
-                return
-            else:
-               print("Invalid option.")
+                            print("You used the coin. 'coffee' added to your backpack.")
+                            print("\nYour updated backpack:")
+                            inventory()
+                            print("\nThere is nothing left to do here. You exit the room.")
+                            HallwayNorth()
+                            return
+                        else:
+                            print(f"You try to use the {use_what}, but it does nothing. Friendly Barista stares at you, smiling.")
+                elif action == "s":
+                    print("You exit the room.")
+                    HallwayNorth()
+                    return
+                else:
+                    print("Invalid option.")
 
         print("You enter a spotless and well furnished cafe, the clean wooden floors and light blue wallpaper decorated with a flower mural making it seem out of place, so comfortable and homely compared to the rest of this dark and gloomy underground structure you are in.")
         print("A barista with calm, blank eyes greets you, staring into your eyes with something less than human.")
@@ -348,16 +384,17 @@ def Cafe():
         print("You see a huge coin drawing behind him on the wall, silver with a coffee cup engraved on it. That must be the currency to buy a coffee.")
         print("You ask about the kidnapping and keys but he acts clueless, but still smiling as laid back as ever.")
 
-        action = input("\nWhat do you want to do? Options: use, s\n").lower()
-        
-        if action == "use":
-            print("There is nothing helpful in your backpack right now, best come back later to find something suitable.")
-        elif action == "s":
-            print("You exit the room.")
-            HallwayNorth()
-            return
-        else:
-            print("Invalid option.")
+        while True:
+            action = input("\nWhat do you want to do? Options: use, s\n").lower()
+            
+            if action == "use":
+                print("There is nothing helpful in your backpack right now, best come back later to find something suitable.")
+            elif action == "s":
+                print("You exit the room.")
+                HallwayNorth()
+                return
+            else:
+                print("Invalid option.")
 
 def AndyRoom():
 
@@ -499,10 +536,10 @@ def PartyRoom():
             print("Invalid option.")
 
 def HallwayWest():
-
-    while True:
-        print("\n---HallwayWest---")
-        print("There are three rooms down this hallway. A kitchen to the north, a casino to the south, and a library continuing west. You can also return to the cellar back to the east.")
+    print("\n---HallwayWest---")
+    print("There are three rooms down this hallway. A kitchen to the north, a casino to the south, and a library continuing west. You can also return to the cellar back to the east.")
+        
+    while True:  
         action = input("\nWhat do you want to do? Options: show, n, e, s, w\n").lower()
         if action == "show":
             inventory()
@@ -552,7 +589,6 @@ def Kitchen():
 
         while True:
             pizza = []
-
 
             action = input("\nWhat do you want to do? Options: show, cook, s\n").lower()
 
@@ -765,73 +801,89 @@ def Casino():
 def Library():
 
     global has_entered_library
+    global UNFINSIHED_FIGHT
 
     print("\n---Library---")
 
-    if has_entered_library == False:
-
-        has_entered_library = True
-        print("You enter a vast library, huge wooden shelves towering to a ceiling as high as a cathedral's. The dim ceiling lights every few steps shine down in dim pathways around the shelves, stretching left and right.")
-        print("You walk up to the front desk, and unsurprisingly no one is there. You look around, unsure what to do.")
-        print("Is this library important? Or is this just a huge trove of knowledge randomly stashed here?\n")
-
-        print("All of a sudden, a tall woman swiftly emerges from one of the aisles, and stands behind the desks to look at you sternly.") 
-        print("'Hello. What do you need?' she asks coldly, looking down at you over her pink rectangular glasses.")
-        print("You awkwardly reply that you don't know what to do here, and you mumbling something about leaving and letting her go back to what she was doing, but she cuts across you sharply.")
-        print("'Hmph, follow me.'\n")
-
-        print("You follow her as she walks past the bookshelves, leading you somewhere. The aisles go on endlessly, as you soon find yourself stopping in front of aisle 97, where the librarian walks down it.")
-        print("'This is our non-fiction section. We pride ourselves with having a perfect book return rate, so EVERY. SINGLE. BOOK. should be here. There shouldn't be any missing books at all. But, in that IMPOSSIBLE event, people who fix the upheld order Please return all the books in the CORRECT PLACE when you have finished reading. Thank you.'")
-        print("She leaves so quickly, catching you by surprise, and by the time you turn around to look where she went, the area around you is empty.\n")
-
-        print("You walk down the aisle slowly, browsing all the books with interest. You're not sure what you're doing here, but you're intrigued enough to stay for a while longer.")
-        print("You walk for a little longer, both ends of the aisle now out of sight, when you notice something.")
-        print("There is an small gap between two books, labelled 'Common Cooking: Edition 1' and 'Common Cooking: Edition 3'.\n")
-        print("Interesting. Didn't the librarian just say that all books were returned here? Why is there a missing book?")
-        print("Logically thinking, the book that belongs in the gap must be labelled 'Common Cooking: Edition 2', so where would that be?")
-        print("You think about this. Maybe you should find it and return it to it's place?")
-
-
-    if has_entered_library == True:
-        print("You walk through the extravagant library, your footsteps echoing on the spruce planks. The vintage style lights glow softly, illuminating the covers of thousands of books each time you pass an aisle.")
-        print("You go straight to aisle 97, where the gap in between the two cookbooks remain.")
-
-    action = input("\nWhat do you want to do? Options: show, use, e").lower()
-    
-    if action == "show":
-        inventory()
-    elif action == "use":
-
-        if "cookbook" not in player_inventory:
-            print("There is nothing helpful in your backpack right now, best come back later to find something suitable.")
-
-        else:
-            while True:
-                print("Use what?\n\nYour backpack:")
-                for item, qty in player_inventory.items():
-                    print(f"- {item} (x{qty})")
-                use_what = input(">")
-
-                if use_what == "cookbook":
-                    
-                    player_inventory["cookbook"] -= 1
-                    if player_inventory["cookbook"] == 0:
-                        del player_inventory["cookbook"]
-                    
-                    print("You slide the cookbook into the empty slot, perfectly in line with all the other books. After a moment of silence, you hear the quietest creak of a door opening somewhere, and you look around, confused. The noise sounded like it came from the front desk, so you hurry over there. You spot the gleaming key from a distance, and begin walking quicker towards it, your hand outstretched when...\n")
-                    print("A figure, in thick, metal armour carrying a LITERAL GREATSWORD emerges from the aisle right in front of you, blocking your path. It swings its weapon dangerously towards you in an arc, and you retreat immediately, watching in pure terror and fear. The medieval visored knight’s helm blocked it's face, an empty void of darkness behind the mask.\n")
-                    print("What. Is. Happening.\n")
-                    print("How is there the most terrifying knight in existence holding a weapon RIGHT HERE. IN THIS LIBRARY.\n")
-                    print("There is no way to escape this situation...so it looks like you'll have to fight.")
-                    FIGHT()
-
-
-    elif action == "e":
-        print("You exit the room.")
+    if "key3" in player_inventory:
+        print("You push against the door to library, but it doesn't budge. Well, you certainly don't want to go in and see the creepy robot again, so you leave the door as it is.")
+        print("You are in the west hallway.")
         HallwayWest()
 
-    else:
-        print("Invalid option.")
+    if "key3" not in player_inventory:
+
+        if UNFINSIHED_FIGHT == True:
+            print("You enter the library cautiously, peering around the door looking for the knight. They're there, watching you, standing in front of the front desk where the key is.")
+            print("They makes no movement as you get closer, until you're around 10 meters apart, when they swing their greatsword as a warning and wait.")
+            print("Well, looks like there's only one option now: fight.")
+            FIGHT()
+
+        if has_entered_library == False:
+
+            has_entered_library = True
+            print("You enter a vast library, huge wooden shelves towering to a ceiling as high as a cathedral's. The dim ceiling lights every few steps shine down in dim pathways around the shelves, stretching left and right.")
+            print("You walk up to the front desk, and unsurprisingly no one is there. You look around, unsure what to do.")
+            print("Is this library important? Or is this just a huge trove of knowledge randomly stashed here?\n")
+
+            print("All of a sudden, a tall woman swiftly emerges from one of the aisles, and stands behind the desks to look at you sternly.") 
+            print("'Hello. What do you need?' she asks coldly, looking down at you over her pink rectangular glasses.")
+            print("You awkwardly reply that you don't know what to do here, and you mumbling something about leaving and letting her go back to what she was doing, but she cuts across you sharply.")
+            print("'Hmph, follow me.'\n")
+
+            print("You follow her as she walks past the bookshelves, leading you somewhere. The aisles go on endlessly, as you soon find yourself stopping in front of aisle 97, where the librarian walks down it.")
+            print("'This is our non-fiction section. We pride ourselves with having a perfect book return rate, so EVERY. SINGLE. BOOK. should be here. There shouldn't be any missing books at all. But, in that IMPOSSIBLE event, people who fix the upheld order Please return all the books in the CORRECT PLACE when you have finished reading. Thank you.'")
+            print("She leaves so quickly, catching you by surprise, and by the time you turn around to look where she went, the area around you is empty.\n")
+
+            print("You walk down the aisle slowly, browsing all the books with interest. You're not sure what you're doing here, but you're intrigued enough to stay for a while longer.")
+            print("You walk for a little longer, both ends of the aisle now out of sight, when you notice something.")
+            print("There is an small gap between two books, labelled 'Common Cooking: Edition 1' and 'Common Cooking: Edition 3'.\n")
+            print("Interesting. Didn't the librarian just say that all books were returned here? Why is there a missing book?")
+            print("Logically thinking, the book that belongs in the gap must be labelled 'Common Cooking: Edition 2', so where would that be?")
+            print("You think about this. Maybe you should find it and return it to it's place?")
+
+
+        if has_entered_library == True:
+            print("You walk through the extravagant library, your footsteps echoing on the spruce planks. The vintage style lights glow softly, illuminating the covers of thousands of books each time you pass an aisle.")
+            print("You go straight to aisle 97, where the gap in between the two cookbooks remain.")
+
+
+        while True:
+            action = input("\nWhat do you want to do? Options: show, use, e").lower()
+            
+            if action == "show":
+                inventory()
+            elif action == "use":
+
+                if "cookbook" not in player_inventory:
+                    print("There is nothing helpful in your backpack right now, best come back later to find something suitable.")
+
+                else:
+                    while True:
+                        print("Use what?\n\nYour backpack:")
+                        for item, qty in player_inventory.items():
+                            print(f"- {item} (x{qty})")
+                        use_what = input(">")
+
+                        if use_what == "cookbook":
+                            
+                            player_inventory["cookbook"] -= 1
+                            if player_inventory["cookbook"] == 0:
+                                del player_inventory["cookbook"]
+                            
+                            print("You slide the cookbook into the empty slot, perfectly in line with all the other books. After a moment of silence, you hear the quietest creak of a door opening somewhere, and you look around, confused. The noise sounded like it came from the front desk, so you hurry over there. You spot the gleaming key from a distance, and begin walking quicker towards it, your hand outstretched when...\n")
+                            print("A figure, in thick, metal armour carrying a LITERAL GREATSWORD emerges from the aisle right in front of you, blocking your path. It swings its weapon dangerously towards you in an arc, and you retreat immediately, watching in pure terror and fear. The medieval visored knight’s helm blocked it's face, an empty void of darkness behind the mask.\n")
+                            print("What. Is. Happening.\n")
+                            print("How is there the most terrifying knight in existence holding a weapon RIGHT HERE. IN THIS LIBRARY.\n")
+                            print("There is no way to escape this situation...so it looks like you'll have to fight.")
+                            FIGHT()
+
+
+            elif action == "e":
+                print("You exit the room.")
+                HallwayWest()
+
+            else:
+                print("Invalid option.")
 
 
 def create_weapon(name):
@@ -860,18 +912,11 @@ def create_weapon(name):
         print("You ran out of weapons.")
         return None
 
-
-def TEST():
-    print("YOU RAN OUT OF WEAPONSSSSS")
-    print("You go back to the cellar.")
-    Cellar()
-
 def display_choices():
     print("---Choose Weapon---")
     for i, (item, info) in enumerate(player_inventory.items(), 1):
         print(f"\n{i}. {item} x {info['count']}")
         info["weapon"].get_stats()
-
 
 
 def FIGHT():
@@ -881,7 +926,7 @@ def FIGHT():
     enemy_health = 100
     stunned = False
 
-    print("You enter the battle...blah blah blah\n")
+    print("You enter the battle...\n")
     print("---Your enemy:---")
     print("name: Robot Knight")
     print("weapon: Greatsword")
@@ -916,8 +961,8 @@ def FIGHT():
 
         if not player_inventory:
             print("You ran out of weapons.")
-            print("Dang, maybe try again when you have more weapons.")
-            TEST()
+            print("Maybe try to find more items to use against the knight.")
+            FAILED()
             
 
         show_choices()
@@ -926,7 +971,6 @@ def FIGHT():
         print(f"Your health = {player_health}")
         print(f"Enemy health = {enemy_health}\n")
 
-        # Player turn
         if weapon == "water bottle":
             crit = random.random() < 0.8
             dmg = 30 if crit else 10
@@ -970,7 +1014,7 @@ def FIGHT():
             print("You use the cookbook. It deals 15 damage.")
             if stun:
                 stunned = True
-                print("The enemy is stunned!\n")
+                print("Your opponent is stunned for 1 turn.\n")
             else:
                 print()
 
@@ -1000,7 +1044,7 @@ def FIGHT():
             print("You use the note. It does no damage.")
             if stun:
                 stunned = True
-                print("But it stuns the enemy!\n")
+                print("Your opponent is stunned for 1 turn.\n")
             else:
                 print()
 
@@ -1009,7 +1053,7 @@ def FIGHT():
             print("You use the helpful casino reminder. It does no damage.")
             if stun:
                 stunned = True
-                print("But it stuns the enemy!\n")
+                print("Your opponent is stunned for 1 turn.\n")
             else:
                 print()
 
@@ -1020,7 +1064,6 @@ def FIGHT():
             print(f"You use the socks. {'It crit!' if crit else 'It does 15 damage.'} It deals {dmg} damage.\n")
 
         else:
-            # default fallback
             dmg = player_inventory[weapon]["weapon"].damage
             enemy_health -= dmg
             print(f"You use {weapon}. It deals {dmg} damage.\n")
@@ -1031,7 +1074,6 @@ def FIGHT():
         if enemy_health <= 0:
             break
 
-        # Enemy turn
         if not stunned:
             print(f"==Enemy Turn {turn_num}==\n")
             print(f"Your health = {player_health}")
@@ -1056,7 +1098,6 @@ def FIGHT():
             print(f"Your health = {player_health}")
             print(f"Enemy health = {enemy_health}\n")
 
-        # Remove used item
         player_inventory[weapon]["count"] -= 1
         if player_inventory[weapon]["count"] <= 0:
             del player_inventory[weapon]
@@ -1066,9 +1107,53 @@ def FIGHT():
 
     if player_health > 0:
         print("=====Congratulations, you won!===\n")
-        print("You defeated the evil knight, and now you won the prize! ")
+        FIGHT_WON()
     else:
-        print("===You lost!===")
+        print("===You lost!===\n")
+        FAILED()
 
+def FIGHT_WON():
+    print("You see the knight falling to the ground, their weapon clattering on the floor. The impact of the fall causes the helmet to bounce off, and you see... the librarian? ")
+    print("Was the librarian the knight this whole time? Why would she attck you? Why would she lead you to the aisle that would reveal the key, only to stop you?")
+    print("You have no idea what is happening, but with the librarian defeated, you take this chance to run and grab the key from the front desk.")
+    print("You see the small '3' indented on it, and you put it into your backpack.")
+    print("While the knight is unconcious, you grab all the items you've used and thrown, thankfully all in tact, and put them back into your backpack.\n")
+
+    print("'key3' added to your backpack.")
+    print("\nYour updated backpack:")
+    inventory()
+
+    print("\nYou're about to exit the room when you give the fallen librarian another glance when you open the door to leave, and you see something really strange.")
+    print("The librarian is getting up, not facing you, but walking SUPER WEIRDLY. Her arms and legs are contantly twitching and jerking sharply, sometimes making her fall down again. That's...not right.")
+    print("Then suddenenly, with a blink of an eye, her head TURNS.")
+    print("Just her head. Not her body. Her head turns a full 180° towards you, and then her face FALLS OFF.")
+    print("You weren't fighting a knight or the librarian, you were fighting a robot THIS WHOLE TIME, it was only wearing the librarian's face.")
+    print("That is really...creppy. Before the robot and move another step, you bolt out of the library, slamming the door behind you, a loud CLICK echoing as the door locks.")
+    print("Well THAT was terriying. Not going in there everrrr again.")
+    print("You are now in the west hallway.")
+    HallwayWest()
+    return
+
+def FAILED():
+
+    global UNFINSIHED_FIGHT
+
+    while True:
+        action = input("\nWhat do you want to do? Options: show, fight, exit.\n").lower()
+        if action == "show":
+            inventory()
+        elif action == "fight":
+            FIGHT()
+        elif action == "exit":
+            UNFINSIHED_FIGHT = True
+            print("You quickly escape the room, slamming the door shut.")
+            print("You wait nervously in the hallway, listening for the knight's footsteps that indicate it's going to follow you.")
+            print("However, it's pure silence except for your heavy breathing and thumping heartbeat.")
+            print("Next time you enter the library, you'll have to immediately fight the knight again, if you want the key, because you bet it won't fall for any traps or tricks.")
+            print("You are in the west hallway.")
+            HallwayWest()
+            return
+        else:
+            print("Invalid option.")
 
 FIGHT()
